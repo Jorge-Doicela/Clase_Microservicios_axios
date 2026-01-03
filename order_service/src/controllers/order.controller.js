@@ -14,7 +14,7 @@ exports.createOrder = catchAsync(async (req, res) => {
 
     const enriched = await Promise.all(details.map(async item => {
         try {
-            return { ...item, precio: (await (await fetch(`http://localhost:4002/api/products/${item.id_producto}`)).json()).precio };
+            return { ...item, precio: (await (await fetch(`http://localhost:4002/api/product/${item.id_producto}`)).json()).precio };
         } catch (e) { throw new Error(`Producto ${item.id_producto} no encontrado`); }
     }));
 

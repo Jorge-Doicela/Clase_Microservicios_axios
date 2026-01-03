@@ -1,4 +1,4 @@
-const UserService = require('../services/users.service');
+const UserService = require('../services/user.service');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getUsers = catchAsync(async (req, res) => res.json(await UserService.getAll()));

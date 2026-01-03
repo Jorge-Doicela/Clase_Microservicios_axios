@@ -1,4 +1,4 @@
-const repo = require('../repositories/users.repository');
+const repo = require('../repositories/user.repository');
 
 const validateUser = (user, create = true) => {
     if ((create || user.nombre) && (!user.nombre || user.nombre.length < 3)) throw new Error("Nombre corto");
