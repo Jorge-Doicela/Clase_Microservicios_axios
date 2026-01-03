@@ -5,6 +5,6 @@ const app = require('express')();
 
 app.use(require('express').json())
     .use('/api/users', require('./src/routes/users.route'))
-    .listen(4001, () => console.log(4001));
+    .listen(4001);
 
-app.use((e, r, s, n) => s.status(400).json({ error: e.message }));
+app.use((err, req, res, next) => res.status(400).json({ error: err.message }));
