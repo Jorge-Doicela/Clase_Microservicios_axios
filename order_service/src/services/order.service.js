@@ -1,18 +1,18 @@
-const repo = require('../repositories/order.repository');
+const repositorio = require('../repositories/order.repository');
 
-const calculateTotal = (order) => {
-    if (!order.detalles) return order;
-    order.totalCalculado = order.detalles.reduce((acc, item) => {
-        if (!item.cantidad || item.cantidad <= 0) throw new Error("Cantidad inválida");
-        return acc + (item.cantidad * item.precio);
+const calculateTotal = (orden) => {
+    if (!orden.detalles) return orden;
+    orden.totalCalculado = orden.detalles.reduce((totalAcumulado, producto) => {
+        if (!producto.cantidad || producto.cantidad <= 0) throw new Error("Cantidad inválida");
+        return totalAcumulado + (producto.cantidad * producto.precio);
     }, 0);
-    return order;
+    return orden;
 };
 
-exports.getAll = repo.getAll;
-exports.getById = repo.getById;
-exports.create = (order) => {
-    if (!order.id_usuario || !order.detalles || !order.detalles.length) throw new Error("Datos incompletos");
-    return repo.create(calculateTotal(order));
+exports.getAll = repositorio.getAll;
+exports.getById = repositorio.getById;
+exports.create = (orden) => {
+    if (!orden.id_usuario || !orden.detalles || !orden.detalles.length) throw new Error("Datos incompletos");
+    return repositorio.create(calculateTotal(orden));
 };
-exports.delete = repo.delete;
+exports.delete = repositorio.delete;

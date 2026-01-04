@@ -1,16 +1,16 @@
-const UserService = require('../services/user.service');
-const catchAsync = require('../utils/catchAsync');
+const servicio = require('../services/user.service');
+const manejarError = require('../utils/catchasync');
 
-exports.getUsers = catchAsync(async (req, res) => res.json(await UserService.getAll()));
+exports.getUsers = manejarError(async (req, res) => res.json(await servicio.getAll()));
 
-exports.getUserById = catchAsync(async (req, res) => {
-    const user = await UserService.getById(req.params.id);
-    if (!user) throw new Error("Usuario no encontrado");
-    res.json(user);
+exports.getUserById = manejarError(async (req, res) => {
+    const usuario = await servicio.getById(req.params.id);
+    if (!usuario) throw new Error("Usuario no encontrado");
+    res.json(usuario);
 });
 
-exports.createUser = catchAsync(async (req, res) => res.status(201).json(await UserService.create(req.body)));
+exports.createUser = manejarError(async (req, res) => res.status(201).json(await servicio.create(req.body)));
 
-exports.updateUser = catchAsync(async (req, res) => res.json(await UserService.update(req.params.id, req.body)));
+exports.updateUser = manejarError(async (req, res) => res.json(await servicio.update(req.params.id, req.body)));
 
-exports.deleteUser = catchAsync(async (req, res) => res.json(await UserService.delete(req.params.id)));
+exports.deleteUser = manejarError(async (req, res) => res.json(await servicio.delete(req.params.id)));

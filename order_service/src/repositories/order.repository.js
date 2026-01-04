@@ -18,16 +18,16 @@ const transaction = async (fn) => {
 exports.getAll = async () => (await db.query("SELECT * FROM orders")).rows;
 
 exports.getById = async (id) => {
-    const order = (await db.query('SELECT * FROM orders WHERE id_order = $1', [id])).rows[0];
-    return order ? { orden: order, detalle: (await db.query('SELECT * FROM orden_detalle WHERE order_id = $1', [id])).rows } : null;
+    const orden = (await db.query('SELECT * FROM orders WHERE id_order = $1', [id])).rows[0];
+    return orden ? { orden: orden, detalle: (await db.query('SELECT * FROM orden_detalle WHERE order_id = $1', [id])).rows } : null;
 };
 
-exports.create = async (order) => transaction(async (client) => {
-    const newId = (await client.query('INSERT INTO orders (id_usuario, total, estado) VALUES ($1, 0, $2) RETURNING id_order', [order.id_usuario, 'CREADA'])).rows[0].id_order;
-    for (const item of order.detalles) {
+exports.create = async (orden) => transaction(async (client) => {
+    const newId = (await client.query('INSERT INTO orders (id_usuario, total, estado) VALUES ($1, 0, $2) RETURNING id_order', [orden.id_usuario, 'CREADA'])).rows[0].id_order;
+    for (const item of orden.detalles) {
         await client.query('INSERT INTO orden_detalle (order_id, producto_id, cantidad, precio_unitario) VALUES ($1, $2, $3, $4)', [newId, item.id_producto, item.cantidad, item.precio]);
     }
-    const final = (await client.query('UPDATE orders SET total = $1 WHERE id_order = $2 RETURNING *', [order.totalCalculado || 0, newId])).rows[0];
+    const final = (await client.query('UPDATE orders SET total = $1 WHERE id_order = $2 RETURNING *', [orden.totalCalculado || 0, newId])).rows[0];
     return { orden: final, detalle: (await client.query('SELECT * FROM orden_detalle WHERE order_id = $1', [newId])).rows };
 });
 

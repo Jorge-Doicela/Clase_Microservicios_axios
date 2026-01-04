@@ -1,16 +1,16 @@
-const ProductService = require('../services/product.service');
-const catchAsync = require('../utils/catchAsync');
+const servicio = require('../services/product.service');
+const manejarError = require('../utils/catchasync');
 
-exports.getProducts = catchAsync(async (req, res) => res.json(await ProductService.getAll()));
+exports.getProducts = manejarError(async (req, res) => res.json(await servicio.getAll()));
 
-exports.getProductById = catchAsync(async (req, res) => {
-    const product = await ProductService.getById(req.params.id);
-    if (!product) throw new Error("Producto no encontrado");
-    res.json(product);
+exports.getProductById = manejarError(async (req, res) => {
+    const producto = await servicio.getById(req.params.id);
+    if (!producto) throw new Error("Producto no encontrado");
+    res.json(producto);
 });
 
-exports.createProduct = catchAsync(async (req, res) => res.status(201).json(await ProductService.create(req.body)));
+exports.createProduct = manejarError(async (req, res) => res.status(201).json(await servicio.create(req.body)));
 
-exports.updateProduct = catchAsync(async (req, res) => res.json(await ProductService.update(req.params.id, req.body)));
+exports.updateProduct = manejarError(async (req, res) => res.json(await servicio.update(req.params.id, req.body)));
 
-exports.deleteProduct = catchAsync(async (req, res) => res.json(await ProductService.delete(req.params.id)));
+exports.deleteProduct = manejarError(async (req, res) => res.json(await servicio.delete(req.params.id)));
