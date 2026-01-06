@@ -9,13 +9,11 @@ exports.obtenerOrdenPorId = manejarError(async (req, res) => {
 });
 
 exports.crearOrden = manejarError(async (req, res) => {
-    // Validar usuario
     try {
         const usuario = await (await fetch(`http://localhost:4001/api/user/${req.body.usuario_id}`)).json();
         if (!usuario) throw new Error("Usuario no existe");
     } catch (e) { throw new Error("Usuario no encontrado"); }
 
-    // Validar producto
     try {
         const producto = await (await fetch(`http://localhost:4002/api/product/${req.body.producto_id}`)).json();
         if (!producto) throw new Error("Producto no existe");
