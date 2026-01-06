@@ -9,30 +9,23 @@ exports.obtenerOrdenPorId = manejarError(async (req, res) => {
 });
 
 exports.crearOrden = manejarError(async (req, res) => {
-    const { detalles: listaProductos, id_usuario } = req.body;
-    if (!listaProductos || !listaProductos.length) throw new Error("Detalles requeridos");
+    // Validar usuario
+    try {
+        const usuario = await (await fetch(`http://localhost:4001/api/user/${req.body.user_id}`)).json();
+        if (!usuario) throw new Error("Usuario no existe");
+    } catch (e) { throw new Error("Usuario no encontrado"); }
 
-    const productosConPrecio = await Promise.all(listaProductos.map(async productoDetalle => {
-        try {
-            return { ...productoDetalle, precio: (await (await fetch(`http://localhost:4002/api/product/${productoDetalle.id_producto}`)).json()).precio };
-        } catch (e) { throw new Error(`Producto ${productoDetalle.id_producto} no encontrado`); }
-    }));
+    // Validar producto
+    try {
+        const producto = await (await fetch(`http://localhost:4002/api/product/${req.body.product_id}`)).json();
+        if (!producto) throw new Error("Producto no existe");
+    } catch (e) { throw new Error("Producto no encontrado"); }
 
-    res.status(201).json({ order: await servicio.crear({ id_usuario, detalles: productosConPrecio }) });
+    res.status(201).json(await servicio.crear(req.body));
 });
 
 exports.actualizarOrden = manejarError(async (req, res) => {
-    const { detalles, id_usuario } = req.body;
-    let data = { ...req.body };
-
-    if (detalles && detalles.length > 0) {
-        data.detalles = await Promise.all(detalles.map(async item => {
-            const producto = await (await fetch(`http://localhost:4002/api/product/${item.id_producto}`)).json();
-            return { ...item, precio: producto.precio };
-        }));
-    }
-
-    const updated = await servicio.actualizar(req.params.id, data);
+    const updated = await servicio.actualizar(req.params.id, req.body);
     if (!updated) throw new Error("Orden no encontrada");
     res.json(updated);
 });
