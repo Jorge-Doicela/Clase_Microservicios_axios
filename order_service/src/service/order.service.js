@@ -1,7 +1,5 @@
 const repositorio = require('../repository/order.repository');
 
-const repositorio = require('../repository/order.repository');
-
 exports.obtenerTodos = repositorio.obtenerTodos;
 exports.obtenerPorId = repositorio.obtenerPorId;
 

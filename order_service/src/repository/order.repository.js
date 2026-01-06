@@ -1,4 +1,3 @@
-```javascript
 const db = require("../database/index.db");
 
 exports.obtenerTodos = async () => (await db.query("SELECT * FROM ordenes")).rows;
@@ -15,4 +14,3 @@ exports.actualizar = async (id, orden) => (await db.query(
 )).rows[0];
 
 exports.eliminar = async (id) => (await db.query("DELETE FROM ordenes WHERE id = $1 RETURNING *", [id])).rows[0];
-```
